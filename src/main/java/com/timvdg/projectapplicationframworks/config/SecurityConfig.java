@@ -45,13 +45,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/productList").authenticated()
+                .antMatchers("/cart").authenticated()
                 .anyRequest().permitAll()
                 .and()
                 .formLogin().usernameParameter("email")
                             .defaultSuccessUrl("/productList")
                             .permitAll()
                 .and()
-                .logout().logoutSuccessUrl("/").permitAll();
+                .logout().logoutSuccessUrl("/productList").permitAll();
     }
 }

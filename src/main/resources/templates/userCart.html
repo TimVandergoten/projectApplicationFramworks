@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Shopping Cart - Animal Friends</title>
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/5.1.3/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+<div th:replace="navbar :: navControl()"></div>
+   <div class="container">
+       <div>
+           <H2>Your Shopping Cart</H2>
+           <br/>
+       </div>
+       <div class="row">
+        <div class="col-sm-8">
+            <th:block th:each="item, status:${itemList}">
+                <div class="row border rounded" th:with="product = ${item.product}" th:id="'row'+${status.count} ">
+                    <div class="col-1">
+                        <div>[[${status.count}]]</div>
+                        <div><a th:href="@{'/cart/remove/'+${product.id}}"
+                                class="material-icons link-remove"
+                                th:rowNumber="${status.count}"
+                        >delete</a></div>
+                    </div>
+                    <div class="col-3">
+                        <img class="" height="150px" width="150px" th:src="@{${'/productImages/' + product.imageName}}" th:alt="${product.name}">
+                    </div>
+                    <div class="col-3">
+                        <div>
+                            <p> [[${product.name}]]</p>
+                        </div>
+                        <div th:replace="amountControl :: amountControl(${item.quantity},${product.getId()})"></div>
+                        <div>
+                            <span>x</span>
+                            <span>€[[${product.price}]]</span>
+                            <span>= €</span> <b><span th:id="'subTotal'+${product.getId()}" class="totalpriceitem">[[${item.getTotalPrice}]]</span></b>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+        </div>
+       <div class="col-sm-4" th:unless="${#lists.isEmpty(itemList)}">
+           <div>
+               <span class="h3">Total amount</span>
+           </div><div class="mt-2">
+                    <span class="h2" id="totalamount"></span>
+           </div>
+           <div class="mt-2">
+               <button class="btn btn-primary">Check out</button>
+           </div>
+       </div>
+       </div>
+       <div th:if="${#lists.isEmpty(itemList)}">
+           <h3>You haven't added any items to your cart</h3>
+       </div>
+   </div>
+   <script type="text/javascript">
+       contextPath = "http://localhost:8080"
+       var csrfHeaderName = "[[${_csrf.headerName}]]"
+       var csrfValue = "[[${_csrf.token}]]"
+   </script>
+   <script th:src="@{/js/cart.js}"></script>
+</body>
+</html>

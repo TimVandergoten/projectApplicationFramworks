@@ -32,7 +32,7 @@ class ProductRepositoryTest {
         product.setName("Product 1");
         product.setCategory(category1);
         product.setDescription("Nullam imperdiet id libero non commodo");
-        product.setImageName("Default");
+        product.setImageName("Default.png");
         product.setPrice(14.99);
         Product savedProduct = productRepository.save(product);
 
@@ -40,7 +40,7 @@ class ProductRepositoryTest {
         product2.setName("Product 2");
         product2.setCategory(category2);
         product2.setDescription("Nullam imperdiet id libero non commodo");
-        product2.setImageName("Default");
+        product2.setImageName("Default.png");
         product2.setPrice(19.99);
         Product savedProduct2 = productRepository.save(product2);
 
@@ -48,7 +48,7 @@ class ProductRepositoryTest {
         product3.setName("Product 3");
         product3.setCategory(category1);
         product3.setDescription("Nullam imperdiet id libero non commodo");
-        product3.setImageName("Default");
+        product3.setImageName("Default.png");
         product3.setPrice(24.99);
         Product savedProduct3 = productRepository.save(product3);
 
@@ -56,7 +56,7 @@ class ProductRepositoryTest {
         product4.setName("Product 4");
         product4.setCategory(category3);
         product4.setDescription("Nullam imperdiet id libero non commodo");
-        product4.setImageName("Default");
+        product4.setImageName("Default.png");
         product4.setPrice(9.99);
         Product savedProduct4 = productRepository.save(product4);
 
