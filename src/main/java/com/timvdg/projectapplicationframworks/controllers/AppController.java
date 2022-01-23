@@ -9,10 +9,7 @@ import com.timvdg.projectapplicationframworks.services.CategoryService;
 import com.timvdg.projectapplicationframworks.services.ProductService;
 import com.timvdg.projectapplicationframworks.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Controller
 public class AppController {
@@ -35,17 +33,12 @@ public class AppController {
     @Autowired
     UserService userService;
 
-    @GetMapping({"/","/home"})
-    public String home(){
-        return "home";
-    }
-
     @GetMapping({"/register"})
     public String getSignupForm(Model model){
         model.addAttribute("user",new User());
         return "signUpForm";
     }
-    @GetMapping({"/productList"})
+    @GetMapping({"/","/productList"})
     public String getProductList(Model model){
         model.addAttribute("categories", categoryService.getAllCategory());
         model.addAttribute("products", productService.getAllProduct());
@@ -69,7 +62,7 @@ public class AppController {
         List<CartItem> itemList = cartServices.listCartItems(user);
 
         model.addAttribute("itemList",itemList);
-
+        model.addAttribute("totalAmount",0);
         return "userCart";
     }
 
@@ -80,6 +73,19 @@ public class AppController {
         user.setPassword(encodedPass);
         userRepo.save(user);
         return "registerSucces";
+    }
+    @GetMapping("/checkout")
+    public String checkout (Model model,@AuthenticationPrincipal CustomUserDetails customUserDetails){
+        User user = customUserDetails.getUser();
+        List<CartItem> itemList = cartServices.listCartItems(user);
+        AtomicReference<Float> total = new AtomicReference<>(0f);
+        itemList.forEach(cartItem -> {
+            double price = cartItem.getProduct().getPrice();
+            int amount = cartItem.getQuantity();
+            total.updateAndGet(v -> new Float((float) (v + price * amount)));
+        });
+        model.addAttribute("total",total.get());
+        return "checkout";
     }
 
 
